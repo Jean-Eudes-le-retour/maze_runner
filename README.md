@@ -6,14 +6,14 @@
 
 <!-- This is the shield badge where you can replace the webots.cloud link in brackets with your personal webots.cloud page -->
 [![webots.cloud - Benchmark](https://img.shields.io/badge/webots.cloud-Benchmark-007ACC)](
-  https://benchmark.webots.cloud/run?version=R2022b&url=https%3A%2F%2Fgithub.com%2Fcyberbotics%2Fbenchmark-template%2Fblob%2Fmain%2Fworlds%2Frobot_programming.wbt&type=benchmark
+  https://benchmark.webots.cloud/run?version=R2022b&url=https%3A%2F%2Fgithub.com%2FJean-Eudes-le-retour%2Fmaze_runner%2Fblob%2Fmain%2Fworlds%2Fmaze_runner.wbt&type=benchmark
 )
 
 ## Description
 
 <span id="description">
 
-Write here a short description of your benchmark.
+Program a Thymio II robot to complete a maze without colliding with the walls.
 
 </span>
 
