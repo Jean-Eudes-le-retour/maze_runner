@@ -153,7 +153,7 @@ jobs:
       - name: Get leaderboard link
         if: ${{ steps.benchmark_check.outcome == 'success' }}
         run: |
-          echo LEADERBOARD_LINK="$( grep -oP '\[!\[webots\.cloud - Benchmark\]\(.+\)\]\(\K.+(?=\))' README.md )" >> "$GITHUB_ENV"
+          echo LEADERBOARD_LINK="$( grep -zoP '\[!\[webots\.cloud - Benchmark\]\(.+\)\]\([[:space:]*]\K.+(?=[[:space:]*]\))' README.md )" >> "$GITHUB_ENV"
 
       - name: Final feedback message
         uses: peter-evans/close-issue@v1
