@@ -6,6 +6,7 @@ on:
     types: [created]
 jobs:
   verify-competitor:
+    name: Verification of the given repository link
     if: > # Do the checks if there is a new registration or a 'retry' comment on a pending registration
       (
         join(github.event.issue.labels.*.name) == 'registration'
