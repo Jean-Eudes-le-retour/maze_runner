@@ -21,12 +21,7 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: Individual evaluation in progress...
-    outputs:
-      comment-id: ${{ steps.feedback.outputs.comment-id }}
-  record:
-    needs: feedback_message
-    runs-on: ubuntu-latest
-    steps:
+
       - name: Check out the repo
         uses: actions/checkout@v3
 
@@ -53,14 +48,14 @@ jobs:
         if: ${{ steps.webots_test.outcome == 'success' }}
         uses: peter-evans/create-or-update-comment@v2.1.0
         with:
-          comment-id: ${{ needs.feedback_message.outputs.comment-id }}
+          comment-id: ${{ steps.feedback.outputs.comment-id }}
           body: Evaluation finished! The [leaderboard](${{ env.LEADERBOARD_LINK }}) is up-to-date.
 
       - name: Feedback on failure
         if: ${{ steps.webots_test.outcome == 'failure' }}
         uses: peter-evans/create-or-update-comment@v2.1.0
         with:
-          comment-id: ${{ needs.feedback_message.outputs.comment-id }}
+          comment-id: ${{ steps.feedback.outputs.comment-id }}
           body: |
             There was a problem. Look at action logs for more details:
             https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
