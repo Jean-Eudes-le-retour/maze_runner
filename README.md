@@ -1,6 +1,6 @@
 <span id="title">
 
-# Benchmark organizer template
+# Maze runner
 
 </span>
 
@@ -8,18 +8,6 @@
 [![webots.cloud - Benchmark](https://img.shields.io/badge/webots.cloud-Benchmark-007ACC)](
   https://benchmark.webots.cloud/run?version=R2022b&url=https%3A%2F%2Fgithub.com%2Fcyberbotics%2Fbenchmark-template%2Fblob%2Fmain%2Fworlds%2Frobot_programming.wbt&type=benchmark
 )
-
-<!-- TODO: add examples when available
-## Benchmark examples
-
-- <https://github.com/cyberbotics/robot-programming-benchmark-disabled>
-- <https://github.com/cyberbotics/inverted-pendulum-benchmark-disabled>
--->
-## Organizer setup
-
-To organize your own benchmark, follow the instructions in the [ORGANIZER.md](../../blob/main/ORGANIZER.md) file.
-
----
 
 ## Description
 
@@ -35,10 +23,10 @@ Write here a short description of your benchmark.
 
 <span id="information">
 
-- Difficulty: Middle School, High School, Bachelor, Master or PhD
-- Robot: robot name
-- Language: programming language of the controller template
-- Commitment: amount of time needed to finish the benchmark
+- Difficulty: High School
+- Robot: Thymio2
+- Language: Python
+- Commitment: A couple of hours
 
 </span>
 
@@ -60,12 +48,12 @@ You should now be on your **own** repository page and not the benchmark creator'
 1. [Click here](../../settings/access) to go to the "Collaborators" setting page
    1. You might need to confirm the access by re-entering your GitHub password.
 1. You should see a "Manage access" box where you will see the current collaborators of the repo.
-Click on the "Add people" and search for "ORGANIZER_NAME". When you found the organizer, add them to the repository.
+Click on the "Add people" and search for "Jean-Eudes-le-retour". When you found the organizer, add them to the repository.
 
 ### Register by posting an issue
 
 1. Go back to the main page of your repository if that is not the case and copy the repository URL from the address bar to your clipboard.
-1. [Click here](https://github.com/ORGANIZER_NAME/ORGANIZER_REPOSITORY/issues/new?assignees=&labels=registration&template=registration_form.yml&title=Registration+to+benchmark) to go to the organizer repository and start your registration. If it doesn't work, you can do it manually by going to the organizer's repository, then to the "Issues" tab, creating a new issue and choosing "Registration to benchmark".
+1. [Click here](https://github.com/Jean-Eudes-le-retour/maze_runner/issues/new?assignees=&labels=registration&template=registration_form.yml&title=Registration+to+benchmark) to go to the organizer repository and start your registration. If it doesn't work, you can do it manually by going to the organizer's repository, then to the "Issues" tab, creating a new issue and choosing "Registration to benchmark".
 1. Paste your repository URL in the URL field and click the "Submit new issue" button.
 
 A series of automated actions will take place in a few seconds. If everything went well, you should get a message saying that you are successfully registered to the benchmark. If there was a problem, read the feedback message, fix what is wrong and post a **"retry"** comment on the registration issue to re-run the automated verification.

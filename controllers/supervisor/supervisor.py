@@ -1,37 +1,63 @@
-"""Supervisor of the Robot Programming benchmark."""
+"""Supervisor of the Maze Runner benchmark."""
 
 from controller import Supervisor
 import os
 
-supervisor = Supervisor()
 
-timestep = int(supervisor.getBasicTimeStep())
+def isPositionChanged(v1, v2):
+    return abs(v1[1] - v2[1]) > 0.001 or abs(v1[0] - v2[0]) > 0.001
 
-thymio = supervisor.getFromDef("BENCHMARK_ROBOT")
-translation = thymio.getField("translation")
 
-tx = 0
-ongoing_benchmark = True
-while supervisor.step(timestep) != -1 and ongoing_benchmark:
-    t = translation.getSFVec3f()
-    if ongoing_benchmark:
-        percent = 1 - abs(0.25 + t[0]) / 0.25
-        if percent < 0:
-            percent = 0
-        if t[0] < -0.01 and abs(t[0] - tx) < 0.0001:  # away from starting position and not moving any more
-            ongoing_benchmark = False
-            name = 'Robot Programming'
-            message = f'success:{name}:{percent}:{percent*100:.2f}%'
-        else:
-            message = f"percent:{percent}"
-        supervisor.wwiSendText(message)
-        tx = t[0]
+def isMazeEndReached(position):
+    return position[0] < 0.15 and position[0] > -0.15 and position[1] > -0.60 and position[1] < -0.45
 
-print(f"Benchmark complete! Your performance was {message.split(':')[3]}")
+
+robot = Supervisor()
+timestep = int(4 * robot.getBasicTimeStep())
+robot.step(10 * timestep)
+
+thymio2 = robot.getFromDef("THYMIO2")
+
+robot.step(10 * timestep)
+
+mazeBlocksList = []
+mazeBlocksListCount = 0
+topChildrenField = robot.getFromDef("MAZE_WALLS").getField("children")
+topNodesCount = topChildrenField.getCount()
+for i in range(topNodesCount):
+    node = topChildrenField.getMFNode(i)
+    if node.getTypeName() == "MazeBlock":
+        object = {
+            "node": node,
+            "initialPosition": node.getPosition()
+        }
+        mazeBlocksList.append(object)
+        mazeBlocksListCount += 1
+
+
+running = True
+stopMessageSent = False
+while running and robot.step(timestep) != -1:
+    time = robot.getTime()
+    # If some of the maze blocks have been moved immediately terminate the benchmark
+    for i in range(0, mazeBlocksListCount):
+        item = mazeBlocksList[i]
+        if isPositionChanged(item['initialPosition'], item['node'].getPosition()):
+            time = 60
+            robot.wwiSendText("time:%-24.3f" % time)
+            break
+
+    if time < 60 and not isMazeEndReached(thymio2.getPosition()):
+        robot.wwiSendText("time:%-24.3f" % time)
+    else:
+        running = False
+        timestep = int(timestep / 4)
+
+robot.wwiSendText("stop_%-24.3f" % time)
 
 # Performance output used by automated CI script
 CI = os.environ.get("CI")
 if CI:
-    print(f"performance:{percent}")
+    print(f"performance:{time}")
 
-supervisor.simulationSetMode(Supervisor.SIMULATION_MODE_PAUSE)
+robot.simulationSetMode(Supervisor.SIMULATION_MODE_PAUSE)
