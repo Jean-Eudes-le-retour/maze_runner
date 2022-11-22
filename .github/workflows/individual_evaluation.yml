@@ -1,0 +1,75 @@
+name: Individual competitor evaluation of their controller
+
+run-name: "Individual evaluation of competitor ${{ github.event.issue.number }} from ${{ github.event.issue.user.login }}"
+
+on: 
+  issue_comment:
+    types: [created]
+
+jobs:
+  feedback_message:
+    if: >
+      contains(github.event.issue.labels.*.name, 'registration') &&
+      contains(github.event.issue.labels.*.name, 'accepted') &&
+      github.event.issue.user.login == github.event.comment.user.login &&
+      contains(github.event.comment.body, 'run')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Feedback on individual evaluation
+        id: feedback
+        uses: peter-evans/create-or-update-comment@v2.1.0
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: Individual evaluation in progress...
+    outputs:
+      comment-id: ${{ steps.feedback.outputs.comment-id }}
+  record:
+    needs: feedback_message
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Isolate repo link
+        run: |
+          solo_reference=$( grep ./competitors.txt -e '^${{ github.event.issue.number }}:[[:alnum:]._:/-]*' )
+          echo $solo_reference
+          echo "INPUT_INDIVIDUAL_EVALUATION=$solo_reference" >> $GITHUB_ENV
+
+      - name: Record and update benchmark animation
+        id: webots_test
+        uses: cyberbotics/benchmark-record-action@main
+        env:
+          INPUT_REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+          INPUT_ALLOW_PUSH: True
+        continue-on-error: true
+
+      - name: Get leaderboard link
+        if: ${{ steps.webots_test.outcome == 'success' }}
+        run: |
+          echo LEADERBOARD_LINK="$( grep -oP '\[!\[webots\.cloud - Benchmark\]\(.+\)\]\(\K.+(?=\))' README.md )" >> "$GITHUB_ENV"
+
+      - name: Feedback on success
+        if: ${{ steps.webots_test.outcome == 'success' }}
+        uses: peter-evans/create-or-update-comment@v2.1.0
+        with:
+          comment-id: ${{ needs.feedback_message.outputs.comment-id }}
+          body: Evaluation finished! The [leaderboard](${{ env.LEADERBOARD_LINK }}) is up-to-date.
+
+      - name: Feedback on failure
+        if: ${{ steps.webots_test.outcome == 'failure' }}
+        uses: peter-evans/create-or-update-comment@v2.1.0
+        with:
+          comment-id: ${{ needs.feedback_message.outputs.comment-id }}
+          body: |
+            There was a problem. Look at action logs for more details:
+            https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Delete request comment
+        run: |
+          gh api \
+            --method DELETE \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}
+        env:
+          GH_TOKEN: ${{ github.token }}
