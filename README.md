@@ -1,6 +1,6 @@
 <span id="title">
 
-# Maze runner différent
+# Maze runner c'est très le changement
 
 </span>
 
