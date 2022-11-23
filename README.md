@@ -1,6 +1,6 @@
 <span id="title">
 
-# Maze runner
+# Maze runner title change
 
 </span>
 
