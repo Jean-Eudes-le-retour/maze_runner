@@ -1,6 +1,6 @@
 <span id="title">
 
-# Maze runner test test
+# Maze runner test
 
 </span>
 
