@@ -244,6 +244,7 @@ DEF THYMIO2 Thymio2 {
   controller "move_in_maze"
   controllerArgs []
   synchronization FALSE
+  window "maze_runner"
 }
 MazeRunnerBenchmark {
 }
